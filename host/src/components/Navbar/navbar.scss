@@ -1,0 +1,17 @@
+.navbar-container{
+  .navbar-bg-dark{
+    background-color: rgb(56, 56, 57)!important;
+  }
+  .navbar{
+    .logout{
+      cursor: pointer;
+    }
+    .user{
+      color: #fff;
+      padding-right: 15px;
+    }
+  }
+  .shadow-navbar{
+    height: 56px;
+  }
+}

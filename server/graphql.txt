@@ -1,0 +1,44 @@
+# Write your query or mutation here
+# {
+#   storeDataByDate(
+#     storeNo: 96518
+#     beginDateString: "2019-03-28"
+#     endDateString: "2019-03-30"
+#   ) {
+#     originData {
+#       storeNo
+#       orderDate
+#       orderTime
+#       sales
+#     }
+#     peopleCostData{
+#       totalPeoples
+#       pmPeoples
+#       ctPeoples
+#       csrPeoples
+#       deliveryPeoples
+#       outFieldPeoples
+#     }
+#   }
+# }
+{
+  originStoreData(
+    storeNo: 96518
+    beginDateString: "2019-03-28"
+    endDateString: "2019-03-28"
+  ) {
+      storeNo
+    }
+}
+
+# {
+#   stores{
+#     storeNo
+#   }
+# }
+
+# {
+#   humanData{
+#     deliveryPeoples
+#   }
+# }

@@ -1,0 +1,29 @@
+.login-container{
+  height: 100vh;
+  width: 100vw;
+  padding-top: 30vh;
+  // background-image: url("../../assets/images/login/dominos-bg.jpg");
+  background-position: center;
+  background-size: cover;
+  .login-form{
+    background-color: rgba(255, 255, 255, .9);
+    width: 400px;
+    padding: 20px 50px;
+    margin: 0 auto;
+    border-radius: 5px;
+    div {
+      padding-bottom: 2vh;
+    }
+    label{
+      width: 5vw;
+      color: #7c8088;
+    }
+    button, input {
+      width: 100%;
+    }
+  }
+  .error-msg{
+    text-align: center;
+    color: red;
+  }
+}

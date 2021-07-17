@@ -1,0 +1,169 @@
+import { gql } from 'apollo-server-express';
+import Constant from './models/mongo/Constant';
+import Stores from './models/mongo/Stores';
+import StoresLog from './models/mongo/StoresLog';
+import StoreDataMongo from './models/mongo/StoreDataSchema';
+
+// Construct a schema, using GraphQL schema language
+const typeDefs = gql`
+  type Query {
+    hello: String
+    storeDataList: [StoreData]
+    constant(name: String): Constant
+    constants: [Constant]
+    storeDataByDate(storeNo: Int, beginDateString: String, endDateString: String): [[StoreHourData]]
+    originStoreData(storeNo: Int, beginDateString: String, endDateString: String): [StoreData]
+    originStoreDataByWeeks(storeNo: Int, date: String, weeks: Int, startTime: Int, endTime: Int): [StoreData]
+    stores: [Store]
+    storeInfo(storeNo: Int): Store
+    storesRank(startDate: String, endDate: String): [StoreRank]
+  }
+
+  type StoreData {
+    _id: String
+    storeNo: Int
+    storeName: String
+    orderDate: String
+    orderTime: Int
+    sales: Float
+    tc: Int
+    atp: Float
+    callPercent: Float
+    storePercent: Float
+    deliveryPercent: Float
+    avgSideFoodQty: Float
+    avgPizzaQty: Float
+    avgDrinkQty: Float
+  }
+
+  type HumanData {
+    totalPeoples: Float
+    csrPeoples: Float
+    pmPeoples: Float
+    ctPeoples: Float
+    deliveryPeoples: Float
+    outFieldPeoples: Float
+  }
+
+  type StoreHourData {
+    originData: StoreData
+    peopleCostData: HumanData
+  }
+
+  type Constant {
+    _id: String
+    name: String
+    value: Float
+    desc: String
+  }
+
+  type Store {
+    _id: String
+    storeNo: Int
+    storeName: String
+    storeStatus: String
+    openDate: String
+    closeDate: String
+    seatCount: Int
+    storeConfigId: String
+    posNum: Int
+    ovenNum: Int
+    bikeNum: Int
+    cutTablePeoples: Int
+    insideEfficiency: Float
+    middleEfficiency: Float
+    outsideEfficiency: Float
+    updateTime: String
+  }
+
+  type StoreRank{
+    storeNo: Int
+    storeName: String
+    tc: Float
+    sales: Float
+  }
+  
+  input StoreInput{
+    posNum: Int
+    ovenNum: Int
+    bikeNum: Int
+    cutTablePeoples: Int
+    insideEfficiency: Float
+    middleEfficiency: Float
+    outsideEfficiency: Float
+    updateTime: String
+  }
+
+  type Mutation{
+    updateStore(storeNo:Int, newStoreInfo:StoreInput):Store
+  }
+
+  schema {
+    query: Query
+    mutation: Mutation
+  }
+`;
+
+// Provide resolver functions for your schema fields
+const resolvers = {
+  Query: {
+    originStoreDataByWeeks: async (root, { storeNo, date, weeks, startTime, endTime }) => {
+      console.log(date)
+      let condition = {};
+      let days = [];
+      for (let i = 0; i < weeks; i++) {
+        let dateString = new Date(new Date(date).setTime(new Date(date).getTime() - ((i + 1) * 7 * 24 * 60 * 60 * 1000))).toISOString().split('T')[0];
+        days.push({
+          orderDate: { "$gte": new Date(`${dateString} 00:00:00.000Z`), "$lte": new Date(`${dateString} 23:59:59.000Z`) },
+          orderTime: { "$gte": startTime, "$lte": endTime }
+        });
+      }
+      condition = { storeNo, $or: days }
+      console.log(JSON.stringify(condition))
+      return await StoreDataMongo.find(condition).sort({ orderDate: 1, orderTime: 1 })
+    },
+    stores: async () => {
+      return await Stores.find({});
+    },
+    storesRank: async (root, { startDate, endDate }) => {
+      return await StoreDataMongo.aggregate([
+        { $match: { orderDate: { $gte: new Date(`${startDate} 00:00:00.000Z`), $lte: new Date(`${endDate} 23:59:59.000Z`) } } },
+        { $group: { _id: { storeNo: "$storeNo", storeName: "$storeName" }, tsales: { $sum: "$sales" }, ttc: { $sum: "$tc" } } },
+        {
+          $project: {
+            storeNo: "$_id.storeNo",
+            storeName: "$_id.storeName",
+            sales: "$tsales",
+            tc: "$ttc"
+          }
+        },
+        { $sort: { tc: -1 } }
+      ]);
+    },
+    storeInfo: async (root, { storeNo }) => {
+      return await Stores.findOne({ storeNo });
+    },
+    constants: async () => {
+      return await Constant.find({});
+    }
+  },
+  Mutation: {
+    updateStore: async (root, { storeNo, newStoreInfo }) => {
+
+      return await Stores.findOneAndUpdate({ storeNo: storeNo }, newStoreInfo, (error, docs) => {
+        if (error) {
+          console.log(error);
+        } else {
+          const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+          const localISOTime = (new Date(Date.now() - tzOffset)).toISOString();
+          StoresLog.create({ storeNo, ...newStoreInfo, createdTime: localISOTime }, (error, docs) => {
+            if (error) console.log(error);
+          });
+        }
+
+      });
+    }
+  }
+};
+
+export default { typeDefs, resolvers, introspection: true, playground: true };

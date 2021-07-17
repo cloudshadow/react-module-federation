@@ -1,0 +1,107 @@
+{
+  "name": "host",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start:dev": "webpack serve --hot --color --config ./webpack.config.dev.js",
+    "start:prod": "npm run clean-dist && webpack --config ./webpack.config.prod.js --color",
+    "start:test": "npm run clean-dist-stable && webpack --config ./webpack.config.test.js",
+    "eslint": "./node_modules/.bin/eslint ./src/**/*.{ts,tsx}",
+    "clean-dist": "npm run remove-dist && mkdir dist",
+    "clean-dist-stable": "npm run remove-dist-stable && mkdir dist-stable",
+    "remove-dist": "rimraf ./dist",
+    "remove-dist-stable": "rimraf ./dist-stable",
+    "generate": "babel-node tools/generateTemplate/generate.js",
+    "ungenerate": "babel-node tools/generateTemplate/ungenerate.js",
+    "test": "jest --no-cache --runInBand --passWithNoTests"
+  },
+  "dependencies": {
+    "@types/history": "^4.7.8",
+    "@types/jest": "^26.0.23",
+    "@types/node": "^15.14.0",
+    "@types/react": "^17.0.13",
+    "@types/react-dom": "^17.0.8",
+    "@types/react-redux": "^7.1.16",
+    "@types/react-router-dom": "^5.1.7",
+    "axios": "^0.21.1",
+    "connected-react-router": "^6.9.1",
+    "history": "^4.10.1",
+    "jwt-decode": "^3.1.2",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-redux": "^7.2.4",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.1.0",
+    "redux-observable": "^2.0.0",
+    "redux-thunk": "^2.3.0",
+    "rxjs": "^7.1.0",
+    "typesafe-actions": "^5.1.0",
+    "typescript": "^4.3.5"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.14.5",
+    "@babel/core": "^7.14.6",
+    "@babel/node": "^7.14.7",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.14.7",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/preset-typescript": "^7.14.5",
+    "@types/webpack-env": "^1.16.1",
+    "@typescript-eslint/eslint-plugin": "^4.28.1",
+    "@typescript-eslint/parser": "^4.28.1",
+    "babel-loader": "^8.2.2",
+    "bundle-loader": "^0.5.6",
+    "cross-env": "^7.0.3",
+    "css-loader": "^5.2.6",
+    "eslint": "^7.29.0",
+    "eslint-plugin-react": "^7.24.0",
+    "file-loader": "^6.2.0",
+    "happypack": "^5.0.1",
+    "html-webpack-plugin": "^5.3.2",
+    "husky": "^7.0.0",
+    "immer": "^9.0.3",
+    "jest": "^27.0.6",
+    "json-loader": "^0.5.7",
+    "lint-staged": "^11.0.0",
+    "mini-css-extract-plugin": "^1.6.0",
+    "node-sass": "^6.0.1",
+    "postcss-loader": "^6.1.1",
+    "prettier": "2.3.2",
+    "sass-loader": "^12.1.0",
+    "speed-measure-webpack-plugin": "^1.5.0",
+    "style-loader": "^3.0.0",
+    "terser-webpack-plugin": "^5.1.4",
+    "ts-loader": "^9.2.3",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.41.1",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "",
+      "pre-push": "yarn test"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "*.{ts,tsx}": [
+        "npm run eslint",
+        "prettier --write",
+        "git add"
+      ],
+      "*.json": [
+        "prettier --write",
+        "git add"
+      ]
+    },
+    "ignore": [
+      "**/dist/*.min.js",
+      "node_modules"
+    ]
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "autorun": false,
+  "terminals": [
+    {
+      "name": "host",
+      "commands": [
+        "cd host",
+        "npm run start:dev"
+      ]
+    },
+    {
+      "name": "react-client",
+      "commands": [
+        "cd react-client",
+        "npm run start:dev"
+      ]
+    },
+    {
+      "name": "react-client-login",
+      "commands": [
+        "cd react-client-login",
+        "npm run start:dev"
+      ]
+    },
+    {
+      "name": "graphql-client",
+      "commands": [
+        "cd graphql-client",
+        "npm run start:dev"
+      ]
+    },
+    {
+      "name": "server",
+      "commands": [
+        "cd server",
+        "npm run start"
+      ]
+    }
+  ]
+}
