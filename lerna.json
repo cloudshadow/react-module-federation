@@ -1,0 +1,11 @@
+{
+  "packages": [
+    "host",
+    "graphql-client",
+    "react-client",
+    "react-client-login",
+    "react-client-epic",
+    "server"
+  ],
+  "version": "0.0.0"
+}

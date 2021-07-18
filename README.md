@@ -48,3 +48,9 @@ I think we should put the state and function what will be shared code in the top
 
 ### graphql-client (Component)
 > It's the low-level app, shared the graphQL component for the host.
+
+## How to use
+
+* `npx lerna bootstrap`
+* `ext install fabiospampinato.vscode-terminals`
+* Press ⇧⌘P and type `Terminals: Run`
