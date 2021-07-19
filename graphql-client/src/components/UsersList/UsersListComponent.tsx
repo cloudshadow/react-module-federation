@@ -1,5 +1,4 @@
 import React from 'react';
-import { graphql } from 'react-apollo';
 import { useLazyQuery, useApolloClient } from '@apollo/react-hooks';
 import { GET_USERS_LIST, UPDATE_USER_FRAGMENT } from '@/graphql/gql';
 import { IUser } from '@/types/UserTypes';
