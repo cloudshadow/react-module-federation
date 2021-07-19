@@ -35,6 +35,7 @@
 
 ### host
 > It's the top-level app, which depends on `react-client` , `react-client-login`, `react-client-epic`, `graphql-client`.
+
 I think we should put the state and function what will be shared code in the top-level app. (like Auth and Router)
 
 ### react-client (Container)
